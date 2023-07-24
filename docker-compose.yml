@@ -1,0 +1,47 @@
+version: '3'
+services:
+  rabbitmq:
+    container_name: test_task-rabbitmq
+    build:
+      context: ./RabbitMQ_server
+      dockerfile: Dockerfile
+    networks:
+      - webnet
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - "8080:15672"
+      - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
+  HTTP_server:
+    image: node:lts-alpine
+    container_name: test_task-HTTP_server
+    command: sh -c "npm install && npm run start"
+    working_dir: /var/HTTP_server
+    networks:
+      - webnet
+    restart: always
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./HTTP:/var/HTTP_server
+    env_file:
+      - ./.env
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+  RabbitMQ_handler:
+    image: node:lts-alpine
+    container_name: test_task-RabbitMQ_handler
+    command: sh -c "npm install && npm run start"
+    working_dir: /var/RabbitMQ_Handler
+    networks:
+      - webnet
+    restart: always
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./RabbitMQ_handler:/var/RabbitMQ_Handler
+    env_file:
+      - ./.env
+networks:
+  webnet:
