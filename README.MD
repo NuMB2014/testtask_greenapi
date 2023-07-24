@@ -1,5 +1,3 @@
-[Задание](https://drive.google.com/file/d/17L5RXm1DeM51PCEkD9CXt75QnOfENbfn/view?usp=sharing)
-
 Перед запуском контейнеров НУЖНО заполнить .env
 
 Для запуска контейнеров ``docker-compose docker-compose.yml up -d``
